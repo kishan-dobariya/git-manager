@@ -3,7 +3,7 @@ import { gql } from "apollo-boost";
 import { client } from "./Apollo";
 
 export const getAuthToken = (code) => {
-  return fetch(`https://github.com/login/oauth/access_token?client_id=32643f5c08582c341db3&&client_secret=ea6cc5d7c6b493573f682e037419f7f13b7d64fc&&code=${code}`, { //&redirect_uri=http://localhost
+  return fetch(`https://github.com/login/oauth/access_token?client_id=${process.env.REACT_APP_CLIENT_ID}&&client_secret=${process.env.REACT_APP_CLIENT_SECRET}&&code=${code}`, { //&redirect_uri=http://localhost
     method: 'POST',
     mode: 'cors',
     headers: { Accept: 'application/json' },
