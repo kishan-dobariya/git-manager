@@ -10,6 +10,35 @@ export const getAuthToken = (code) => {
   }).then(resp => resp.json());
 }
 
+export const getStarredRepoList = () => {
+  const REPO_LIST = gql`
+    query {
+      viewer {
+        login
+        name
+        starredRepositories(first: 20) {
+          edges {
+            cursor
+            node {
+              id
+              name
+              primaryLanguage {
+                id
+                name
+                color
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+  return client.query({
+    query: REPO_LIST,
+    fetchPolicy: 'no-cache'
+  });
+}
+
 export const getOwnRepoList = () => {
   const REPO_LIST = gql`
     query {

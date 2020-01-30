@@ -4,7 +4,7 @@ import { get } from 'lodash';
 import OwnRepoList from './components/OwnRepo';
 import Auth from './components/Auth';
 import Header from './components/Header';
-import { getAuthToken, getOwnRepoList, } from './Utils/git';
+import { getStarredRepoList, getAuthToken, getOwnRepoList, } from './Utils/git';
 import './App.scss';
 
 class App extends React.Component {
@@ -12,7 +12,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       componentFlag: 1,
+      starredRepositories: [],
       ownRepoList: [],
+      searchedRepo: [],
+      query: '',
       isAuth: false,
     };
   }
@@ -20,6 +23,7 @@ class App extends React.Component {
   async componentDidMount() {
     if (localStorage.getItem('token')) {
       this.setState({ isAuth: true });
+      this.getStarredRepositoryList();
       this.getOwnRepositoryList();
     } else if (window.location.href.split('?code=').length === 2)
       await this.changeAuth(window.location.href.split('?code=')[1]);
@@ -30,6 +34,7 @@ class App extends React.Component {
       const res = await getAuthToken(code);
       localStorage.setItem("token", res.access_token);
       this.setState({ isAuth: true });
+      await this.getStarredRepositoryList();
       await this.getOwnRepositoryList();
       window.location.href = window.location.href.split('?code=')[0];
     } catch (error) {
@@ -38,7 +43,21 @@ class App extends React.Component {
     }
   }
 
+  logout = () => {
+    localStorage.removeItem('token');
+    this.setState({ isAuth: false });
+  }
+
   changeComponent = (flag) => this.setState({ componentFlag: flag });
+
+  getStarredRepositoryList = async () => {
+    try {
+      const res = await getStarredRepoList();
+      this.setState({ starredRepositories: get(res, 'data.viewer.starredRepositories.edges', []) });
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
   getOwnRepositoryList = async () => {
     try {
@@ -50,7 +69,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { isAuth, componentFlag, ownRepoList, } = this.state;
+    const { starredRepositories, isAuth, componentFlag, query, searchedRepo, ownRepoList, } = this.state;
 
     return (
       <div className="MainContainer">
