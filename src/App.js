@@ -1,10 +1,12 @@
 import React from 'react';
 import { get } from 'lodash';
 
+import ListRepo from './components/ListRepo';
 import OwnRepoList from './components/OwnRepo';
+import SearchRepo from './components/SearchRepo';
 import Auth from './components/Auth';
 import Header from './components/Header';
-import { getStarredRepoList, getAuthToken, getOwnRepoList, } from './Utils/git';
+import { getStarredRepoList, removeStart, searchRepoList, addStart, getAuthToken, getOwnRepoList, } from './Utils/git';
 import './App.scss';
 
 class App extends React.Component {
@@ -68,6 +70,39 @@ class App extends React.Component {
     }
   }
 
+  searchRepo = async (query) => {
+    try {
+      this.setState({ query });
+      const res = await searchRepoList({ query });
+      this.setState({ searchedRepo: get(res, 'data.search.nodes', []) });
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  addStartFromRepo = async (id) => {
+    try {
+      const res = await addStart({ id });
+      if (get(res, 'data.addStar.starrable.id', '') === id) {
+        this.setState({ query: '', searchedRepo: [] });
+        this.getStarredRepositoryList();
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  removeStartFromRepo = async (id) => {
+    const { starredRepositories } = this.state;
+    try {
+      const res = await removeStart({ id });
+      if (get(res, 'data.removeStar.starrable.id', '') === id)
+        this.setState({ starredRepositories: starredRepositories.filter(edge => edge.node.id !== id) });
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   render() {
     const { starredRepositories, isAuth, componentFlag, query, searchedRepo, ownRepoList, } = this.state;
 
@@ -81,6 +116,14 @@ class App extends React.Component {
           isAuth && componentFlag === 1 && <div className="container">
             <div className="mx-auto col-lg-5 col-md-7 mt-lg-5 mt-4">
               <OwnRepoList ownRepoList={ownRepoList} />
+            </div>
+          </div>
+        }
+        {
+          isAuth && componentFlag === 2 && <div className="container">
+            <div className="mx-auto col-lg-5 col-md-7 mt-lg-5 mt-4">
+              <SearchRepo addStartFromRepo={this.addStartFromRepo} className="col-md-6 col-sm-12" searchedRepo={searchedRepo} getRepositoryList={this.getStarredRepositoryList} searchRepo={this.searchRepo} query={query} />
+              <ListRepo key={Math.random()} className="col-md-6 col-sm-12" removeStartFromRepo={this.removeStartFromRepo} repositories={starredRepositories} />
             </div>
           </div>
         }

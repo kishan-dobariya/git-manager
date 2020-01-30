@@ -63,3 +63,59 @@ export const getOwnRepoList = () => {
     fetchPolicy: 'no-cache'
   });
 }
+
+export const searchRepoList = (variables) => {
+  const SEARCH_REPO = gql`
+    query topRepos($query: String!) {
+      search(first: 10, query: $query, type: REPOSITORY) {
+        repositoryCount
+        nodes {
+          ... on Repository {
+            name
+            id
+            nameWithOwner
+            stargazers {
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  `;
+  return client.query({
+    query: SEARCH_REPO,
+    variables,
+  });
+}
+
+export const addStart = (variables) => {
+  const ADD_STAR = gql`
+  mutation($id: String!) {
+    addStar(input:{starrableId: $id} ){
+      starrable {
+        id
+      }
+    }
+  }`;
+
+  return client.mutate({
+    mutation: ADD_STAR,
+    variables,
+  });
+}
+
+export const removeStart = (variables) => {
+  const REMOVE_STAR = gql`
+  mutation($id: String!) {
+    removeStar(input:{starrableId: $id} ){
+      starrable {
+        id
+      }
+    }
+  }`;
+
+  return client.mutate({
+    mutation: REMOVE_STAR,
+    variables,
+  });
+}
