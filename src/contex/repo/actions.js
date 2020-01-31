@@ -119,7 +119,7 @@ const useActions = (state, dispatch) => {
         dispatch({ type: types.CHANGE_AUTH });
         dispatch({ type: types.GET_OWN_REPO_LIST });
         dispatch({ type: types.GET_STARRED_REPO_LIST });
-        window.location.href = window.location.href.split('?code=')[0];
+        window.location.href = window.location.href.split('login?code=')[0];
       }
     } catch (error) {
       alert(error.message);

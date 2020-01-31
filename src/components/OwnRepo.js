@@ -1,9 +1,14 @@
-import React, { useContext, } from 'react';
+import React, { useContext, useEffect, } from 'react';
 
 import { StoreContext } from '../contex/repo/contex';
 
 function OwnRepoList() {
-  const { state: { ownRepoList, } } = useContext(StoreContext);
+  const { state: { ownRepoList, }, actions, } = useContext(StoreContext);
+
+  useEffect(() => {
+    actions.getRepositoryList();
+  }, []);
+
 
   return (
     <div>
