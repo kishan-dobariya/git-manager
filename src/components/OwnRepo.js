@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useContext, } from 'react';
 
-function OwnRepoList({ ownRepoList }) {
+import { StoreContext } from '../contex/repo/contex';
+
+function OwnRepoList() {
+  const { state: { ownRepoList, } } = useContext(StoreContext);
+
   return (
     <div>
       <ul className="list-group">
