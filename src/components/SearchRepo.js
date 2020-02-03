@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect, } from 'react';
 
 import { StoreContext } from '../contex/repo/contex';
+import Button from '../styledComponents/button';
+import Li from '../styledComponents/li';
 
 function SearchRepo() {
   const [query, setQuery] = useState('');
@@ -21,9 +23,16 @@ function SearchRepo() {
           className="form-control"
           placeholder="Search Repo"
         />
-        <ul className="list-group SearchResult">
+        <ul className="list-group SearchResult bg-white">
           {
-            searchedRepo.map((node, index) => <li key={index} className="list-group-item RepoItem"><span>{node.nameWithOwner}</span><button onClick={() => actions.addStar({ id: node.id })} className="btn btn-primary btn-sm">Star</button></li>)
+            searchedRepo.map((node, index) =>
+              <Li key={index} className="RepoItem">
+                <span>{node.nameWithOwner}</span>
+                <Button onClick={() => actions.addStar({ id: node.id })}>
+                  <img src="images/star.png" alt="Star" />
+                  Star
+                </Button>
+              </Li>)
           }
         </ul>
       </div>

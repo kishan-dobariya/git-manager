@@ -36,5 +36,13 @@
   .AuthLink, .AuthLink:hover {
     color: white;
   }
+
+  li span {
+    display: inline-block;
+    width: auto;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+  }
 }
 
