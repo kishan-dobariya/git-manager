@@ -20,6 +20,15 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   } />
 )
 
+const LoginRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    !localStorage.getItem('token')
+      ? <Component {...props} />
+      : <Redirect to='/' />
+  )
+  } />
+)
+
 export default function AllRouter() {
 
   return (
@@ -31,7 +40,7 @@ export default function AllRouter() {
             <PrivateRoute path="/starts" component={ListRepo} exact />
             <PrivateRoute path="/repository" component={OwnRepo} exact />
             <PrivateRoute path="/" component={OwnRepo} exact />
-            <Route path="/login" component={Auth} exact />
+            <LoginRoute path="/login" component={Auth} exact />
           </div>
         </div>
       </div>

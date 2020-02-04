@@ -1,11 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { StoreContext } from '../contex/repo/contex';
 import StyledHeader from '../styledComponents/header';
+import LogOut from '../components/LogOut';
 
 function Header() {
-  const { actions } = useContext(StoreContext);
   const [isNavVisible, setNavVisibility] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -38,10 +37,7 @@ function Header() {
     <li className="nav-item">
       <Link className="nav-link text-light" to="/starts">Stars <span className="sr-only">(current)</span></Link>
     </li>
-    <li onClick={() => actions.logout()} className={`nav-item${!isSmallScreen ? " ml-auto" : ""}`}>
-      {/* eslint-disable-next-line no-script-url */}{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-      <a className="nav-link text-light" href="javascript:void(0)">Logout <span className="sr-only">(current)</span></a>
-    </li>
+    <LogOut isSmallScreen={isSmallScreen} />
   </div>
   </>
   return (
